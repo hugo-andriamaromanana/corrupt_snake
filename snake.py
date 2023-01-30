@@ -61,6 +61,27 @@ class Food():
         self.x = random.randint(1, 30)
         self.y = random.randint(1, 20)
 
+
+def event_handler(events):
+    for event in events:
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                return False
+            last_direction = snake.direction
+            if event.type == KEYDOWN:
+                if event.key == K_LEFT and last_direction != "right":
+                    return "left"
+                if event.key == K_RIGHT and last_direction != "left":
+                    return "right"
+                if event.key == K_UP and last_direction != "down":
+                    return "up"
+                if event.key == K_DOWN and last_direction != "up":
+                    return "down"
+        if event.type == pygame.QUIT:
+            return False
+    return None
+    
+
 if __name__ == "__main__":
     grid = [[0 for _ in range(32)] for _ in range(22)]
     grid = [[1]+row[1:] for row in grid]
@@ -82,22 +103,12 @@ if __name__ == "__main__":
         events = pygame.event.get()
         for coords in range(len(body)):
             DISPLAYSURF.fill(GREEN, ((body[coords][0]*cell_size),(body[coords][1]*cell_size),cell_size-1,cell_size-1))
-        for event in events:
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    running = False
-                last_direction = snake.direction
-                if event.type == KEYDOWN:
-                    if event.key == K_LEFT and last_direction != "right":
-                        snake.direction = "left"
-                    if event.key == K_RIGHT and last_direction != "left":
-                        snake.direction = "right"
-                    if event.key == K_UP and last_direction != "down":
-                        snake.direction = "up"
-                    if event.key == K_DOWN and last_direction != "up":
-                        snake.direction = "down"
-            if event.type == pygame.QUIT:
+        evt = event_handler(events)
+        if evt is not None:
+            if evt is False:
                 running = False
+            else:
+                snake.direction = evt
         if snake.x < 1 or snake.x > 30 or snake.y < 1 or snake.y > 20:
             running = False
             print("You lost!")

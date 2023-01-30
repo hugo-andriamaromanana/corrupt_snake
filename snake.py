@@ -30,7 +30,6 @@ pygame.display.set_caption("snake")
 screen = pygame.display.set_mode((960, 660))
 screen.fill(GREY)
 #------------SNAKE----------------
-#Creating my snake
 class Snake():
     def __init__(self):
         self.x = 2
@@ -63,7 +62,6 @@ class Food():
         self.y = random.randint(1, 20)
 
 if __name__ == "__main__":
-        #------------GRID----------------
     grid = [[0 for _ in range(32)] for _ in range(22)]
     grid = [[1]+row[1:] for row in grid]
     grid = [row[:-1]+[1] for row in grid]
@@ -81,7 +79,6 @@ if __name__ == "__main__":
                     DISPLAYSURF.fill(WHITE, ((pos_x*cell_size),(pos_y*cell_size),cell_size-1,cell_size-1))
                 elif grid[pos_y][pos_x]==1:
                     DISPLAYSURF.fill(PINK, ((pos_x*cell_size),(pos_y*cell_size),cell_size-1,cell_size-1))
-        #Save last direction to avoid backtracking
         events = pygame.event.get()
         for coords in range(len(body)):
             DISPLAYSURF.fill(GREEN, ((body[coords][0]*cell_size),(body[coords][1]*cell_size),cell_size-1,cell_size-1))

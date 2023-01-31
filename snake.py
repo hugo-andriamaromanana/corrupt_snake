@@ -39,7 +39,9 @@ COMIC_SANS_BIG = pygame.font.SysFont('Comic Sans MS', 50)
 screen = pygame.display.set_mode((960, 660))
 screen.fill(GREY)
 #------------Menu_vars----------------
-level_selection_pointer=1
+level_selection_pointer=-1
+login_selection_pointer=-2
+menu_selection_pointer=2
 #------------music----------------
 # select=pygame.mixer.Sound("tone1.mp3")
 #------------SNAKE----------------
@@ -129,6 +131,10 @@ def menu_swap(menu_selection_pointer):
         DISPLAYSURF.blit(COMIC_SANS_BIG.render('PLAY', False, passive_color),(350,200))
         DISPLAYSURF.blit(COMIC_SANS_BIG.render('Scoreboard', False, passive_color),(350,300))
         DISPLAYSURF.blit(COMIC_SANS_BIG.render('-> Game History', False, PINK),(350,400))
+    elif menu_selection_pointer == 2:
+        DISPLAYSURF.blit(COMIC_SANS_BIG.render('PLAY', False, passive_color),(350,200))
+        DISPLAYSURF.blit(COMIC_SANS_BIG.render('Scoreboard', False, passive_color),(350,300))
+        DISPLAYSURF.blit(COMIC_SANS_BIG.render('Game History', False, passive_color),(350,400))
 
 def button_swap(level_selection_pointer):
     passive_color=WHITE
@@ -159,6 +165,10 @@ def login_swap(login_selection_pointer):
         DISPLAYSURF.blit(COMIC_SANS.render('Username', False, passive_color),(250,300))
         DISPLAYSURF.blit(COMIC_SANS.render('Password', False, passive_color),(250,350))
         DISPLAYSURF.blit(COMIC_SANS.render('-> Login', False, BLUE),(400,400))
+    elif login_selection_pointer == -2:
+        DISPLAYSURF.blit(COMIC_SANS.render('Username', False, passive_color),(250,300))
+        DISPLAYSURF.blit(COMIC_SANS.render('Password', False, passive_color),(250,350))
+        DISPLAYSURF.blit(COMIC_SANS.render('Login', False, passive_color),(400,400))
 
 def display_username(username_display):
     DISPLAYSURF.blit(COMIC_SANS.render(' '.join(username_display), False, WHITE),(450,300))
@@ -186,16 +196,17 @@ if __name__ == "__main__":
     username=''
     password_display=['_']*4
     password=''
-    login_selection_pointer=-1
     new_user=False
     wrong_password=False
-    menu_selection_pointer=0
     menu=True
     difficulty_lookup=False
     history_lookup=False
     scoreboard_lookup=False
     while running:
         events = pygame.event.get()
+
+
+#-----------------------------LOGIN SCREEN-------------------------------------
         if game_state=='login_screen':
             DISPLAYSURF.fill(BLACK)
             DISPLAYSURF.blit(COMIC_SANS_BIG.render('Welcome to Snake', False, WHITE),(250,100))
@@ -246,6 +257,9 @@ if __name__ == "__main__":
                                 new_user=True
                                 game_state='home'
             pygame.display.update()
+
+
+#-----------------------------HOME SCREEN---------------------------------------
         if game_state=='home':
             DISPLAYSURF.fill(BLACK)
             if menu:
@@ -261,6 +275,9 @@ if __name__ == "__main__":
             DISPLAYSURF.blit(COMIC_SANS_BIG.render(f'Welcome to Snake {username}', False, WHITE),(200,75))
             for event in events:
                 if event.type == pygame.KEYDOWN:
+
+                    
+#-----------------------------MENU----------------------------------------------
                     if menu:
                         difficulty_lookup=False
                         history_lookup=False
@@ -285,6 +302,9 @@ if __name__ == "__main__":
                             password=''
                             username_display=['_']*4
                             password_display=['_']*4
+
+
+#-----------------------------DIFFICULTY-------------------------------------------
                     if difficulty_lookup:
                         menu=False
                         if event.key == K_UP:
@@ -299,12 +319,35 @@ if __name__ == "__main__":
                         if event.key==pygame.K_BACKSPACE:
                             menu=True
                             difficulty_lookup=False
+
+
+#-----------------------------HISTORY-------------------------------------------
+                    if history_lookup:
+                        menu=False
+                        DISPLAYSURF.blit(COMIC_SANS.render('History:', False, WHITE),(350,200))
+                        if event.key==pygame.K_BACKSPACE:
+                            menu=True
+                            history_lookup=False
+
+#-----------------------------SCOREBOARD-------------------------------------------
+                    if scoreboard_lookup:
+                        menu=False
+                        DISPLAYSURF.blit(COMIC_SANS.render('Scoreboard:', False, WHITE),(350,200))
+                        if event.key==pygame.K_BACKSPACE:
+                            menu=True
+                            scoreboard_lookup=False
+
+
+
                     if event.key == pygame.K_ESCAPE:
                         running = False
                         reset()
                 if event.type == pygame.QUIT:
                     running = False
             pygame.display.update()
+
+
+#-----------------------------GAME SCREEN---------------------------------------
         if game_state=='game':
             screen.fill(GREY)
             grid = [[0 for _ in range(LEVEL_SETTINGS[level_selection_pointer]['GRID_WIDTH'])] for _ in range(LEVEL_SETTINGS[level_selection_pointer]['GRID_HEIGHT'])]

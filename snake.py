@@ -205,7 +205,7 @@ if __name__ == "__main__":
             display_password(password_display)
             if wrong_password:
                 DISPLAYSURF.blit(COMIC_SANS.render('Wrong password, try again!', False, RED),(350,500))
-            DISPLAYSURF.blit(COMIC_SANS.render('Use your keys to navigate', False, WHITE),(250,550))
+            DISPLAYSURF.blit(COMIC_SANS_SMOL.render('SPACE: play, ESC: quit, ENTER: select, BACKSPACE: return', False, GREY),(200,600))
             for event in events:
                 if event.type == pygame.KEYDOWN:
                     if event.key == K_UP:
@@ -257,7 +257,7 @@ if __name__ == "__main__":
                 DISPLAYSURF.blit(COMIC_SANS.render(f'New user created! Best of luck! {username}', False, GREEN),(200,550))
             if not new_user:
                 DISPLAYSURF.blit(COMIC_SANS.render(f'Welcome back {username}!', False, PURPLE),(250,500))
-            DISPLAYSURF.blit(COMIC_SANS_SMOL.render('Use your arrows to select, Press SPACE to play', False, GREY),(250,550))
+            DISPLAYSURF.blit(COMIC_SANS_SMOL.render('SPACE: play, ESC: quit, ENTER: select, BACKSPACE: return', False, GREY),(200,600))
             DISPLAYSURF.blit(COMIC_SANS_BIG.render(f'Welcome to Snake {username}', False, WHITE),(200,75))
             for event in events:
                 if event.type == pygame.KEYDOWN:

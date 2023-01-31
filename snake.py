@@ -179,6 +179,7 @@ def TRUE_login(username,password):
 if __name__ == "__main__":
     running=True
     snake=Snake()
+    food=Food()
     game_state='login_screen'
     limit_number = lambda n: max(min(n, 1), -1)
     username_display=['_']*4
@@ -283,6 +284,7 @@ if __name__ == "__main__":
                             level_selection_pointer=limit_number(level_selection_pointer-1)
                             button_swap(level_selection_pointer)
                         if event.key == pygame.K_SPACE:
+                            reset()
                             game_state='game'
                         if event.key==pygame.K_BACKSPACE:
                             menu=True

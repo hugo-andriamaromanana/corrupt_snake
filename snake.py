@@ -1,7 +1,7 @@
 import json
 import pygame
 from pygame.locals import *
-import time
+import hashlib
 import random
 
 #------------colors----------------
@@ -103,6 +103,10 @@ TRANSLATE_POINTER = {
 }
 AUTHORIZED_LETTERS='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
 KEYS = [K_UP, K_DOWN, K_LEFT, K_RIGHT, K_RETURN, K_ESCAPE, K_BACKSPACE, K_TAB, K_SPACE,K_LSHIFT,K_LCTRL,K_RSHIFT,K_RCTRL,K_CAPSLOCK,K_LALT,K_RALT,K_LMETA,K_RMETA,K_LSUPER,K_RSUPER,K_MODE,K_HELP,K_PRINT,K_SYSREQ,K_BREAK,K_MENU,K_POWER,K_EURO]
+
+def hash_pass(password):
+    return hashlib.sha256(password.encode()).hexdigest()
+
 class Food():
     def __init__(self):
         self.x = random.randint(1,LEVEL_SETTINGS[level_selection_pointer]['INNER_GRID_WIDTH'])
@@ -182,7 +186,7 @@ def user_check(username):
     return False
 
 def TRUE_login(username,password):
-    if users[username]==password:
+    if users[username]==hash_pass(password):
         return True
     return False
 
@@ -251,7 +255,7 @@ if __name__ == "__main__":
                                 if not TRUE_login(username,password):
                                     wrong_password=True
                             elif not user_check(username):
-                                users[username]=password
+                                users[username]=hash_pass(password)
                                 with open('users.json', 'w') as f:
                                     json.dump(users, f, indent=4)
                                 new_user=True

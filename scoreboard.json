@@ -1,2 +1,17 @@
 {
+    "Easy": {
+        "Hugo":35,
+        "Paco":40,
+        "Luis":45
+    },
+    "Medium": {
+        "Hugo":35,
+        "Paco":40,
+        "Luis":45
+    },
+    "Hard": {
+        "Hugo":35,
+        "Paco":40,
+        "Luis":45
+    }
 }

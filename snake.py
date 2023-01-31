@@ -61,26 +61,29 @@ class Snake():
         self.score += 1
 
 LEVEL_SETTINGS={
+    1: {
+        'GRID_HEIGHT': 8,
+         'GRID_WIDTH': 12,
+         'INNER_GRID_HEIGHT': 6,
+         'INNER_GRID_WIDTH': 10,
+         'SPEED': 300,
+         'CELL_SIZE': 83
+         },
+    0: {
+        'GRID_HEIGHT': 11,
+         'GRID_WIDTH': 16,
+         'INNER_GRID_HEIGHT': 9,
+         'INNER_GRID_WIDTH': 14,
+         'SPEED': 200,
+         'CELL_SIZE': 60
+         },
     -1: {
         'GRID_HEIGHT': 22,
          'GRID_WIDTH': 32,
          'INNER_GRID_HEIGHT': 20,
          'INNER_GRID_WIDTH': 30,
-         'SPEED': 100
-         },
-    0: {
-        'GRID_HEIGHT': 12,
-         'GRID_WIDTH': 22,
-         'INNER_GRID_HEIGHT': 10,
-         'INNER_GRID_WIDTH': 20,
-         'SPEED': 200
-         },
-    1: {
-        'GRID_HEIGHT': 22,
-         'GRID_WIDTH': 32,
-         'INNER_GRID_HEIGHT': 20,
-         'INNER_GRID_WIDTH': 30,
-         'SPEED': 100
+         'SPEED': 100,
+         'CELL_SIZE': 30
          },
 }
 
@@ -92,11 +95,11 @@ TRANSLATE_POINTER = {
 
 class Food():
     def __init__(self):
-        self.x = random.randint(1, LEVEL_SETTINGS[level_selection_pointer]['INNER_GRID_WIDTH'])
-        self.y = random.randint(1, LEVEL_SETTINGS[level_selection_pointer]['INNER_GRID_HEIGHT'])
+        self.x = random.randint(1,LEVEL_SETTINGS[level_selection_pointer]['INNER_GRID_WIDTH'])
+        self.y = random.randint(1,LEVEL_SETTINGS[level_selection_pointer]['INNER_GRID_HEIGHT'])
     def new_food(self):
-        self.x = random.randint(1, LEVEL_SETTINGS[level_selection_pointer]['INNER_GRID_WIDTH'])
-        self.y = random.randint(1, LEVEL_SETTINGS[level_selection_pointer]['INNER_GRID_HEIGHT'])
+        self.x = random.randint(1,LEVEL_SETTINGS[level_selection_pointer]['INNER_GRID_WIDTH'])
+        self.y = random.randint(1,LEVEL_SETTINGS[level_selection_pointer]['INNER_GRID_HEIGHT'])
 
 def reset():
     global snake
@@ -121,7 +124,7 @@ def button_swap(level_selection_pointer):
 
 if __name__ == "__main__":
     running=True
-    cell_size=30
+    LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']=30
     snake=Snake()
     game_state='home'
     COMIC_SANS_SMOL = pygame.font.SysFont('Comic Sans MS', 20)
@@ -150,7 +153,7 @@ if __name__ == "__main__":
                     if event.key == pygame.K_SPACE:
                         game_state='game'
                         reset()
-                        print(TRANSLATE_POINTER[level_selection_pointer])
+                        print(level_selection_pointer)
                 if event.type == pygame.QUIT:
                     running = False
             pygame.display.update()
@@ -164,11 +167,11 @@ if __name__ == "__main__":
             for pos_y in range(len(grid)):
                 for pos_x in range(len(grid[pos_y])):
                     if grid[pos_y][pos_x]==0:
-                        DISPLAYSURF.fill(WHITE, ((pos_x*cell_size),(pos_y*cell_size),cell_size-1,cell_size-1))
+                        DISPLAYSURF.fill(WHITE,((pos_x*LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']),(pos_y*LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']),LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']-1,LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']-1))
                     elif grid[pos_y][pos_x]==1:
-                        DISPLAYSURF.fill(PINK, ((pos_x*cell_size),(pos_y*cell_size),cell_size-1,cell_size-1))
+                        DISPLAYSURF.fill(PINK,((pos_x*LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']),(pos_y*LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']),LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']-1,LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']-1))
             for coords in range(len(body)):
-                DISPLAYSURF.fill(GREEN, ((body[coords][0]*cell_size),(body[coords][1]*cell_size),cell_size-1,cell_size-1))
+                DISPLAYSURF.fill(GREEN, ((body[coords][0]*LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']),(body[coords][1]*LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']),LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']-1,LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']-1))
             for event in events:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
@@ -193,7 +196,7 @@ if __name__ == "__main__":
             if snake.x == food.x and snake.y == food.y:
                 snake.eat()
                 food.new_food()
-            DISPLAYSURF.fill(RED, ((food.x*cell_size),(food.y*cell_size),cell_size-1,cell_size-1))
+            DISPLAYSURF.fill(RED,((food.x*LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']),(food.y*LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']),LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']-1,LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']-1))
             snake.move()
             pygame.display.update()
             pygame.time.wait(LEVEL_SETTINGS[level_selection_pointer]['SPEED'])

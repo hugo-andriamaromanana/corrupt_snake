@@ -262,6 +262,9 @@ if __name__ == "__main__":
             for event in events:
                 if event.type == pygame.KEYDOWN:
                     if menu:
+                        difficulty_lookup=False
+                        history_lookup=False
+                        scoreboard_lookup=False
                         if event.key == K_UP:
                             menu_selection_pointer=limit_number(menu_selection_pointer+1)
                             menu_swap(menu_selection_pointer)
@@ -275,6 +278,13 @@ if __name__ == "__main__":
                                 history_lookup=True
                             if menu_selection_pointer==-1:
                                 scoreboard_lookup=True
+                        if event.key==pygame.K_BACKSPACE:
+                            menu=False
+                            game_state='login_screen'
+                            username=''
+                            password=''
+                            username_display=['_']*4
+                            password_display=['_']*4
                     if difficulty_lookup:
                         menu=False
                         if event.key == K_UP:

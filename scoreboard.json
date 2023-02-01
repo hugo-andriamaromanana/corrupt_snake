@@ -1,17 +1,18 @@
 {
     "Easy": {
-        "Hugo":35,
-        "Paco":40,
-        "Luis":45
+        "Hugo":3,
+        "Paco":2,
+        "Luis":1
     },
     "Medium": {
-        "Hugo":35,
-        "Paco":40,
-        "Luis":45
+        "Hugo":3,
+        "Paco":2,
+        "Luis":1
     },
     "Hard": {
-        "Hugo":35,
-        "Paco":40,
-        "Luis":45
+        "Hugo":3,
+        "Paco":2,
+        "Luis":1
     }
 }
+

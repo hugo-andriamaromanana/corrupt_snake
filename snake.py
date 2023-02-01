@@ -119,6 +119,12 @@ def reset_pointers():
 def hash_pass(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
+def initialize_new_user_history(username,history):
+    history[username]={}
+    for i in range(3):
+        history[username][TRANSLATE_POINTER[i]]=[]
+    with open("history.json","w") as f:
+        json.dump(history,f,indent=4)
 class Food():
     def __init__(self):
         possible_food_locations = []
@@ -214,13 +220,13 @@ if __name__ == "__main__":
     game_state='login_screen'
     limit_number = lambda n: max(min(n, 2), 0)
     limit_number_for_2 = lambda n: max(min(n, 1), 0)
-    username_display=['_']*4
+    username_display=['_']*6
     username=''
     password_display=['_']*4
     password=''
     new_user=False
     wrong_password=False
-    
+    game_over=False
     menu=True
     difficulty_lookup=False
     history_lookup=False
@@ -230,7 +236,6 @@ if __name__ == "__main__":
         events = pygame.event.get()
 
 #-----------------------------ARE YOU SURE--------------------------------------------
-#overlapping small window to ask if you are sure you want to quit
         if are_you_sure:
             game_state='are_you_sure'
             quit_popup=pygame.Surface((800,400))
@@ -281,7 +286,7 @@ if __name__ == "__main__":
                         if event.key == K_BACKSPACE and len(username)>0:
                             username=username[:-1]
                             username_display[len(username)]='_'
-                        if event.unicode in AUTHORIZED_LETTERS and len(username)<4 and event.key not in KEYS:
+                        if event.unicode in AUTHORIZED_LETTERS and len(username)<6 and event.key not in KEYS:
                             username+=event.unicode
                             username_display[len(username)-1]=event.unicode
                     if login_selection_pointer==1:
@@ -308,6 +313,7 @@ if __name__ == "__main__":
                                 users[username]=hash_pass(password)
                                 with open('users.json', 'w') as f:
                                     json.dump(users, f, indent=4)
+                                initialize_new_user_history(username,history)
                                 new_user=True
                                 reset_pointers()
                                 game_state='home'
@@ -359,7 +365,7 @@ if __name__ == "__main__":
                             game_state='login_screen'
                             username=''
                             password=''
-                            username_display=['_']*4
+                            username_display=['_']*6
                             password_display=['_']*4
 
 
@@ -444,9 +450,20 @@ if __name__ == "__main__":
                     running = False
             for i in range(1, len(snake.body)):
                 if snake.body[0] == snake.body[i]:
+                    game_over=True
                     game_state='home'
             if snake.x < 1 or snake.x > LEVEL_SETTINGS[level_selection_pointer]['INNER_GRID_WIDTH'] or snake.y < 1 or snake.y > LEVEL_SETTINGS[level_selection_pointer]['INNER_GRID_HEIGHT']:
+                game_over=True
                 game_state='home'
+            if game_over==True:
+                new_user=False
+                for i in [i for i in scoreboard[TRANSLATE_POINTER[level_selection_pointer]].values()]:
+                    if snake.score > i:
+                        print('New highscore!')
+                history[username][TRANSLATE_POINTER[level_selection_pointer]]=history[username][TRANSLATE_POINTER[level_selection_pointer]]+[snake.score]
+                with open('history.json','w') as f:
+                    json.dump(history,f)
+                game_over=False
             if snake.x == food.x and snake.y == food.y:
                 snake.eat()
                 food.new_food()

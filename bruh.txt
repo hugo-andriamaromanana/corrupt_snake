@@ -1,8 +1,6 @@
 TO DO:
--List of pos food can't spwan on
 -How score is registered
 -End screen message on menu
--Are you sure you want to quit? Window
 -How to play window if new user
 -History of last 10 played games, DIFFICULTY, SCORE, DATE
 -Rework game visuals

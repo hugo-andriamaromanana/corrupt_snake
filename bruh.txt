@@ -4,8 +4,7 @@ TO DO:
 -Are you sure you want to quit? Window
 -How to play window if new user
 -History of last 10 played games, DIFFICULTY, SCORE, DATE
+-Rework game visuals
 -Scoreboard of top 10 players difficulty / (name, score, date) 
 -Make sounds work
 -Add more sounds
--Rework game visuals
--Reset pointers on backspace

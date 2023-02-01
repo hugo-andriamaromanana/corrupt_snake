@@ -248,6 +248,8 @@ if __name__ == "__main__":
                                 if not TRUE_login(username,password):
                                     wrong_password=True
                                     login_selection_pointer=1
+                                    password_display=['_']*4
+                                    password=''
                             elif not user_check(username):
                                 users[username]=hash_pass(password)
                                 with open('users.json', 'w') as f:

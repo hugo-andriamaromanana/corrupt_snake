@@ -45,6 +45,7 @@ screen.fill(GREY)
 level_selection_pointer=0
 login_selection_pointer=-1
 menu_selection_pointer=-1
+are_you_sure_pointer=0
 #------------music----------------
 # select=pygame.mixer.Sound("tone1.mp3")
 #------------SNAKE----------------
@@ -120,27 +121,39 @@ def hash_pass(password):
 
 class Food():
     def __init__(self):
-        self.x = random.randint(1,LEVEL_SETTINGS[level_selection_pointer]['INNER_GRID_WIDTH'])
-        self.y = random.randint(1,LEVEL_SETTINGS[level_selection_pointer]['INNER_GRID_HEIGHT'])
-    def new_food(self):
-        #Array of all possible food locations
         possible_food_locations = []
         for i in range(1,LEVEL_SETTINGS[level_selection_pointer]['INNER_GRID_WIDTH']+1):
             for j in range(1,LEVEL_SETTINGS[level_selection_pointer]['INNER_GRID_HEIGHT']+1):
                 possible_food_locations.append([i,j])
-        #Remove all snake body locations from possible food locations
         for i in snake.body:
             possible_food_locations.remove(i)
-        #Choose a random location from the remaining possible food locations
         self.x,self.y = random.choice(possible_food_locations)
-        # self.x = random.randint(1,LEVEL_SETTINGS[level_selection_pointer]['INNER_GRID_WIDTH'])
-        # self.y = random.randint(1,LEVEL_SETTINGS[level_selection_pointer]['INNER_GRID_HEIGHT'])
+    def new_food(self):
+        possible_food_locations = []
+        for i in range(1,LEVEL_SETTINGS[level_selection_pointer]['INNER_GRID_WIDTH']+1):
+            for j in range(1,LEVEL_SETTINGS[level_selection_pointer]['INNER_GRID_HEIGHT']+1):
+                possible_food_locations.append([i,j])
+        for i in snake.body:
+            possible_food_locations.remove(i)
+        self.x,self.y = random.choice(possible_food_locations)
 
 def reset():
     global snake
     global food
     snake = Snake()
     food = Food()
+
+def are_you_sure_swap(are_you_sure_pointer):
+    are_you_sure_options=[("Yes", GREEN), ("No", RED)]
+    passive_color=WHITE
+    arrow='-> '
+    for i, (text, color) in enumerate(are_you_sure_options):
+        if i == are_you_sure_pointer:
+            text = arrow + text
+            blit_color = color
+        else:
+            blit_color = passive_color
+        DISPLAYSURF.blit(COMIC_SANS_BIG.render(text, False, blit_color), (350, 250 + 100*i))
 
 def menu_swap(menu_selection_pointer):
     menu_options = [("PLAY", GREEN), ("Scoreboard", YELLOW), ("Game History", PINK)]
@@ -200,22 +213,49 @@ if __name__ == "__main__":
     food=Food()
     game_state='login_screen'
     limit_number = lambda n: max(min(n, 2), 0)
+    limit_number_for_2 = lambda n: max(min(n, 1), 0)
     username_display=['_']*4
     username=''
     password_display=['_']*4
     password=''
     new_user=False
     wrong_password=False
+    
     menu=True
     difficulty_lookup=False
     history_lookup=False
     scoreboard_lookup=False
- 
+    are_you_sure=False
     while running:
         events = pygame.event.get()
 
-
-#-----------------------------LOGIN SCREEN-------------------------------------
+#-----------------------------ARE YOU SURE--------------------------------------------
+#overlapping small window to ask if you are sure you want to quit
+        if are_you_sure:
+            game_state='are_you_sure'
+            quit_popup=pygame.Surface((800,400))
+            quit_popup.fill(GREY)
+            DISPLAYSURF.blit(quit_popup,(50,100))
+            are_you_sure_pointer = limit_number_for_2(are_you_sure_pointer)
+            DISPLAYSURF.blit(COMIC_SANS_BIG.render('Are you sure you want to quit?', False, WHITE),(100,150))
+            are_you_sure_swap(are_you_sure_pointer)
+            for event in events:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_UP:
+                        are_you_sure_pointer = limit_number_for_2(are_you_sure_pointer - 1)
+                    if event.key == pygame.K_DOWN:
+                        are_you_sure_pointer = limit_number_for_2(are_you_sure_pointer + 1)
+                    if event.key == pygame.K_RETURN:
+                        if are_you_sure_pointer==0:
+                            running=False
+                        elif are_you_sure_pointer==1:
+                            are_you_sure=False
+                            reset_pointers()
+                            game_state=last_game_state
+                    if event.key == pygame.K_ESCAPE:
+                        running=False
+            pygame.display.update()
+#-----------------------------LOGIN SCREEN--------------------------------------------
         if game_state=='login_screen':
             DISPLAYSURF.fill(BLACK)
             DISPLAYSURF.blit(COMIC_SANS_BIG.render('Welcome to Snake', False, WHITE),(250,100))
@@ -235,7 +275,8 @@ if __name__ == "__main__":
                         login_selection_pointer=limit_number(login_selection_pointer+1)
                         login_swap(login_selection_pointer)
                     if event.key == K_ESCAPE:
-                        running=False
+                        last_game_state=game_state
+                        are_you_sure=True
                     if login_selection_pointer==0:
                         if event.key == K_BACKSPACE and len(username)>0:
                             username=username[:-1]
@@ -361,7 +402,8 @@ if __name__ == "__main__":
 
 
                     if event.key == pygame.K_ESCAPE:
-                        running = False
+                        last_game_state=game_state
+                        are_you_sure=True
                 if event.type == pygame.QUIT:
                     running = False
             pygame.display.update()

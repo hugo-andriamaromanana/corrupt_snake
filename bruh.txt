@@ -8,3 +8,4 @@ TO DO:
 -Make sounds work
 -Add more sounds
 -Rework game visuals
+-Reset pointers on backspace

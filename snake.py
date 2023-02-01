@@ -23,6 +23,9 @@ with open("scoreboard.json","r") as f:
     scoreboard = json.load(f)
 with open("users.json","r") as f:
     users = json.load(f)
+with open("history.json","r") as f:
+    history = json.load(f)
+
 
 #--------------const--------------
 DISPLAYSURF = pygame.display.set_mode((960, 660))
@@ -75,7 +78,7 @@ LEVEL_SETTINGS={
          'GRID_WIDTH': 12,
          'INNER_GRID_HEIGHT': 6,
          'INNER_GRID_WIDTH': 10,
-         'SPEED': 300,
+         'SPEED': 200,
          'CELL_SIZE': 80
          },
     1: {
@@ -83,7 +86,7 @@ LEVEL_SETTINGS={
          'GRID_WIDTH': 16,
          'INNER_GRID_HEIGHT': 9,
          'INNER_GRID_WIDTH': 14,
-         'SPEED': 200,
+         'SPEED': 150,
          'CELL_SIZE': 60
          },
     2: {
@@ -120,8 +123,18 @@ class Food():
         self.x = random.randint(1,LEVEL_SETTINGS[level_selection_pointer]['INNER_GRID_WIDTH'])
         self.y = random.randint(1,LEVEL_SETTINGS[level_selection_pointer]['INNER_GRID_HEIGHT'])
     def new_food(self):
-        self.x = random.randint(1,LEVEL_SETTINGS[level_selection_pointer]['INNER_GRID_WIDTH'])
-        self.y = random.randint(1,LEVEL_SETTINGS[level_selection_pointer]['INNER_GRID_HEIGHT'])
+        #Array of all possible food locations
+        possible_food_locations = []
+        for i in range(1,LEVEL_SETTINGS[level_selection_pointer]['INNER_GRID_WIDTH']+1):
+            for j in range(1,LEVEL_SETTINGS[level_selection_pointer]['INNER_GRID_HEIGHT']+1):
+                possible_food_locations.append([i,j])
+        #Remove all snake body locations from possible food locations
+        for i in snake.body:
+            possible_food_locations.remove(i)
+        #Choose a random location from the remaining possible food locations
+        self.x,self.y = random.choice(possible_food_locations)
+        # self.x = random.randint(1,LEVEL_SETTINGS[level_selection_pointer]['INNER_GRID_WIDTH'])
+        # self.y = random.randint(1,LEVEL_SETTINGS[level_selection_pointer]['INNER_GRID_HEIGHT'])
 
 def reset():
     global snake

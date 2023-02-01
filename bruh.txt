@@ -1,4 +1,5 @@
 TO DO:
+-List of pos food can't spwan on
 -How score is registered
 -End screen message on menu
 -Are you sure you want to quit? Window

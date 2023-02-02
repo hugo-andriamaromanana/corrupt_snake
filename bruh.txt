@@ -1,9 +1,0 @@
-TO DO:
--How score is registered
--End screen message on menu
--How to play window if new user
--History of last 10 played games, DIFFICULTY, SCORE, DATE
--Rework game visuals
--Scoreboard of top 10 players difficulty / (name, score, date) 
--Make sounds work
--Add more sounds

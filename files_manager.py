@@ -7,20 +7,21 @@ TRANSLATE_POINTER = {
     0: 'Easy'
 }
 
-#------------json----------------
-with open("users.json","r") as f:
+#------------Json----------------
+with open('json/users.json') as f:
     users = json.load(f)
-with open("history.json","r") as f:
-    history = json.load(f)
-            
-#-------------json dumpers----------------
-def users_dumper(users):
-    with open('users.json', 'w') as f:
-        json.dump(users, f, indent=4)
 
-def history_dumper(history):
-    with open('history.json', 'w') as f:
-        json.dump(history, f, indent=4)
+with open('json/history.json') as f:
+    history = json.load(f)
+
+#-----------Json dump----------
+def users_dumper(data):
+    with open('json/users.json', 'w') as f:
+        json.dump(data, f,indent=4)
+
+def history_dumper(data):
+    with open('json/history.json', 'w') as f:
+        json.dump(data, f,indent=4)
 
 #------------functions for Json----------------
 def hash_pass(password):

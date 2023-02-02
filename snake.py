@@ -105,6 +105,7 @@ def reset_game():
 
 #---------------main----------------
 if __name__ == "__main__":
+    #-------------default states----------------
     game_state='login_screen'
     new_user=False
     wrong_password=False
@@ -115,6 +116,14 @@ if __name__ == "__main__":
     scoreboard_lookup=False
     are_you_sure=False
     running=True
+    #------------login_screen----------------
+    username_display=['_']*6
+    username=''
+    password_display=['_']*4
+    password=''
+    #------------scoreboard-----------------
+    scoreboard={}
+    #Initialise game objects
     snake=Snake()
     food=Food()
     while running:

@@ -39,14 +39,13 @@ login_selection_pointer=-1
 menu_selection_pointer=-1
 are_you_sure_pointer=0
 
-#------------game_vars-----------------------
+#------------functions----------------
+
 limit_number = lambda n: max(min(n, 2), 0)
 limit_number_for_2 = lambda n: max(min(n, 1), 0)
-username_display=['_']*6
-username=''
-password_display=['_']*4
-password=''
-scoreboard={}
+
+#------------game_vars-----------------------
+
 new_user=False
 wrong_password=False
 game_over=False

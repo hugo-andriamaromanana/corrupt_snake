@@ -2,29 +2,16 @@ import pygame
 from pygame.locals import *
 import random
 from files_manager import *
-
+from display_manager import *
 
 #------------pygame----------------
 pygame.init()
 pygame.font.init()
 pygame.display.set_caption("snake")
 
-#--------------const--------------
-DISPLAYSURF = pygame.display.set_mode((960, 660))
-
-#------------font----------------
-COMIC_SANS_SMOL = pygame.font.SysFont('Comic Sans MS', 20)
-COMIC_SANS = pygame.font.SysFont('Comic Sans MS', 30)
-COMIC_SANS_BIG = pygame.font.SysFont('Comic Sans MS', 50)
-
 #------------screen----------------
 screen = pygame.display.set_mode((960, 660))
 screen.fill(GREY)
-#------------Menu_vars----------------
-level_selection_pointer=0
-login_selection_pointer=-1
-menu_selection_pointer=-1
-are_you_sure_pointer=0
 
 #------------SNAKE----------------
 LEVEL_SETTINGS={
@@ -110,40 +97,32 @@ class Food():
 def reset_game():
     global snake
     global food
+    global game_over
     snake = Snake()
     food = Food()
+    game_over = False
+
 
 #---------------main----------------
 if __name__ == "__main__":
-    running=True
-    snake=Snake()
-    food=Food()
     game_state='login_screen'
-    limit_number = lambda n: max(min(n, 2), 0)
-    limit_number_for_2 = lambda n: max(min(n, 1), 0)
-    username_display=['_']*6
-    username=''
-    password_display=['_']*4
-    password=''
     new_user=False
     wrong_password=False
     game_over=False
-    menu=True
+    menu=False
     difficulty_lookup=False
     history_lookup=False
     scoreboard_lookup=False
     are_you_sure=False
+    running=True
+    snake=Snake()
+    food=Food()
     while running:
         events = pygame.event.get()
 
 #-----------------------------ARE YOU SURE--------------------------------------------
         if are_you_sure:
             game_state='are_you_sure'
-            quit_popup=pygame.Surface((800,400))
-            quit_popup.fill(GREY)
-            DISPLAYSURF.blit(quit_popup,(50,100))
-            are_you_sure_pointer = limit_number_for_2(are_you_sure_pointer)
-            DISPLAYSURF.blit(COMIC_SANS_BIG.render('Are you sure you want to quit?', False, WHITE),(100,150))
             are_you_sure_swap(are_you_sure_pointer)
             for event in events:
                 if event.type == pygame.KEYDOWN:
@@ -164,11 +143,7 @@ if __name__ == "__main__":
 #-----------------------------SCOREBOARD--------------------------------------------
         if scoreboard_lookup:
             game_state='scoreboard'
-            scoreboard=pygame.Surface((800,400))
-            scoreboard.fill(GREY)
-            DISPLAYSURF.blit(scoreboard,(50,100))
-            DISPLAYSURF.blit(COMIC_SANS_BIG.render('Scoreboard', False, WHITE),(100,150))
-            DISPLAYSURF.blit(COMIC_SANS_SMOL.render('Press SPACE to return', False, WHITE),(100,550))
+            display_scoreboard(scoreboard)
             for event in events:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
@@ -180,11 +155,7 @@ if __name__ == "__main__":
 #-----------------------------HISTORY--------------------------------------------
         if history_lookup:
             game_state='history'
-            history=pygame.Surface((800,400))
-            history.fill(GREY)
-            DISPLAYSURF.blit(history,(50,100))
-            DISPLAYSURF.blit(COMIC_SANS_BIG.render('History', False, WHITE),(100,150))
-            DISPLAYSURF.blit(COMIC_SANS_SMOL.render('Press SPACE to return', False, WHITE),(100,550))
+            display_history(history)
             for event in events:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
@@ -195,15 +166,12 @@ if __name__ == "__main__":
             pygame.display.update()
 #-----------------------------LOGIN SCREEN--------------------------------------------
         if game_state=='login_screen':
-            DISPLAYSURF.fill(BLACK)
-            DISPLAYSURF.blit(COMIC_SANS_BIG.render('Welcome to Snake', False, WHITE),(250,100))
-            DISPLAYSURF.blit(COMIC_SANS.render('Please login !', False, WHITE),(250,250))
             login_swap(login_selection_pointer)
             display_username(username_display)
             display_password(password_display)
             if wrong_password:
-                DISPLAYSURF.blit(COMIC_SANS.render('Wrong password, try again!', False, RED),(350,500))
-            DISPLAYSURF.blit(COMIC_SANS_SMOL.render('SPACE: play, ENTER: select, BACKSPACE: return, ESC: quit', False, GREY),(200,600))
+                display_wrong_password(wrong_password)
+                wrong_password=False
             for event in events:
                 if event.type == pygame.KEYDOWN:
                     if event.key == K_UP:
@@ -235,6 +203,7 @@ if __name__ == "__main__":
                                 continue
                             if user_check(username):
                                 if TRUE_login(username,password):
+                                    menu=True
                                     game_state='home'
                                 if not TRUE_login(username,password):
                                     wrong_password=True
@@ -246,13 +215,13 @@ if __name__ == "__main__":
                                 users_dumper(users)
                                 initialize_new_user_history(username,history)
                                 new_user=True
+                                menu=True
                                 game_state='home'
             pygame.display.update()
 
 
 #-----------------------------HOME SCREEN---------------------------------------
         if game_state=='home':
-            print(menu_selection_pointer)
             DISPLAYSURF.fill(BLACK)
             if menu:
                 menu_swap(menu_selection_pointer)
@@ -288,6 +257,7 @@ if __name__ == "__main__":
                                 reset_pointers()
                                 last_game_state=game_state
                                 scoreboard_lookup=True
+                                update_scoreboard(history,scoreboard)
                             if menu_selection_pointer==2:
                                 reset_pointers()
                                 last_game_state=game_state
@@ -318,29 +288,20 @@ if __name__ == "__main__":
                             menu=True
                             difficulty_lookup=False
                             reset_pointers()
-
-
 #-----------------------------HISTORY-------------------------------------------
                     if history_lookup:
                         menu=False
-                        DISPLAYSURF.blit(COMIC_SANS.render('History:', False, WHITE),(350,200))
                         if event.key==pygame.K_BACKSPACE:
                             reset_pointers()
                             menu=True
                             history_lookup=False
-
 #-----------------------------SCOREBOARD-------------------------------------------
                     if scoreboard_lookup:
                         menu=False
-                        DISPLAYSURF.blit(COMIC_SANS.render('Scoreboard:', False, WHITE),(350,200))
                         if event.key==pygame.K_BACKSPACE:
                             reset_pointers()
                             menu=True
                             scoreboard_lookup=False
-                        
-
-
-
                     if event.key == pygame.K_ESCAPE:
                         last_game_state=game_state
                         are_you_sure=True
@@ -389,12 +350,13 @@ if __name__ == "__main__":
             if snake.x < 1 or snake.x > LEVEL_SETTINGS[level_selection_pointer]['INNER_GRID_WIDTH'] or snake.y < 1 or snake.y > LEVEL_SETTINGS[level_selection_pointer]['INNER_GRID_HEIGHT']:
                 game_over=True
                 game_state='home'
-            if game_over==True:
-                new_user=False
-                for i in [i for i in scoreboard[TRANSLATE_POINTER[level_selection_pointer]].values()]:
-                    if snake.score > i:
-                        print('New highscore!')
-                history[username][TRANSLATE_POINTER[level_selection_pointer]]=history[username][TRANSLATE_POINTER[level_selection_pointer]]+[snake.score]
+            # if game_over==True and game_state=='home':
+            #     new_user=False
+            #     for i in [i for i in scoreboard[TRANSLATE_POINTER[level_selection_pointer]].values()]:
+            #         if snake.score > i:
+
+                if snake.score >1:
+                    history[username][TRANSLATE_POINTER[level_selection_pointer]]=history[username][TRANSLATE_POINTER[level_selection_pointer]]+[snake.score]
                 history_dumper(history)
                 game_over=False
             if snake.x == food.x and snake.y == food.y:

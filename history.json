@@ -1,1 +1,48 @@
-{"Hugo": {"Easy": [5], "Medium": [], "Hard": [1]}, "Burg": {"Easy": [6, 8], "Medium": [5, 19], "Hard": [3, 16, 16, 18, 53]}, "Burger": {"Easy": [], "Medium": [], "Hard": [2, 6, 45]}}
+{
+    "Hugo": {
+        "Easy": [
+            5,
+            4
+        ],
+        "Medium": [
+            14
+        ],
+        "Hard": [
+            1,
+            28
+        ]
+    },
+    "Burg": {
+        "Easy": [
+            6,
+            8
+        ],
+        "Medium": [
+            5,
+            19
+        ],
+        "Hard": [
+            3,
+            16,
+            16,
+            18,
+            53
+        ]
+    },
+    "Burger": {
+        "Easy": [],
+        "Medium": [],
+        "Hard": [
+            2,
+            6,
+            45
+        ]
+    },
+    "bruhh": {
+        "Easy": [],
+        "Medium": [],
+        "Hard": [
+            9
+        ]
+    }
+}

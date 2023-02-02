@@ -1,43 +1,22 @@
-import json
 import pygame
 from pygame.locals import *
-import hashlib
 import random
-
-#------------colors----------------
-BLACK=(0,0,0)
-WHITE=(255,255,255)
-RED=(255,0,0)
-GREEN=(0,255,0)
-BLUE=(0,0,255)
-YELLOW=(255,255,0)
-ORANGE=(255,165,0)
-PURPLE=(128,0,128)
-PINK=(255,192,203)
-LIGHT_BLUE=(173,216,230)
-CLEAR_BLUE=(0,191,255)
-GREY=(128,128,128)
-
-#------------json----------------
-with open("scoreboard.json","r") as f:
-    scoreboard = json.load(f)
-with open("users.json","r") as f:
-    users = json.load(f)
-with open("history.json","r") as f:
-    history = json.load(f)
+from files_manager import *
 
 
-#--------------const--------------
-DISPLAYSURF = pygame.display.set_mode((960, 660))
 #------------pygame----------------
 pygame.init()
 pygame.font.init()
-pygame.mixer.init()
 pygame.display.set_caption("snake")
+
+#--------------const--------------
+DISPLAYSURF = pygame.display.set_mode((960, 660))
+
 #------------font----------------
 COMIC_SANS_SMOL = pygame.font.SysFont('Comic Sans MS', 20)
 COMIC_SANS = pygame.font.SysFont('Comic Sans MS', 30)
 COMIC_SANS_BIG = pygame.font.SysFont('Comic Sans MS', 50)
+
 #------------screen----------------
 screen = pygame.display.set_mode((960, 660))
 screen.fill(GREY)
@@ -46,33 +25,8 @@ level_selection_pointer=0
 login_selection_pointer=-1
 menu_selection_pointer=-1
 are_you_sure_pointer=0
-#------------music----------------
-# select=pygame.mixer.Sound("tone1.mp3")
-#------------SNAKE----------------
-class Snake():
-    def __init__(self):
-        self.x = 2
-        self.y = 1
-        self.length = 2
-        self.body =[[self.x, self.y], [self.x-1, self.y]]
-        self.direction = "right"
-        self.score = 0
-    def move(self):
-        if self.direction == "right":
-            self.x += 1
-        if self.direction == "left":
-            self.x -= 1
-        if self.direction == "up":
-            self.y -= 1
-        if self.direction == "down":
-            self.y += 1
-        self.body.insert(0, [self.x, self.y])
-        if len(self.body) > self.length:
-            self.body.pop()
-    def eat(self):
-        self.length += 1
-        self.score += 1
 
+#------------SNAKE----------------
 LEVEL_SETTINGS={
     0: {
         'GRID_HEIGHT': 8,
@@ -100,14 +54,7 @@ LEVEL_SETTINGS={
          },
 }
 
-TRANSLATE_POINTER = {
-    2: 'Hard',
-    1: 'Medium',
-    0: 'Easy'
-}
-AUTHORIZED_LETTERS='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
-KEYS = [K_UP, K_DOWN, K_LEFT, K_RIGHT, K_RETURN, K_ESCAPE, K_BACKSPACE, K_TAB, K_SPACE,K_LSHIFT,K_LCTRL,K_RSHIFT,K_RCTRL,K_CAPSLOCK,K_LALT,K_RALT,K_LMETA,K_RMETA,K_LSUPER,K_RSUPER,K_MODE,K_HELP,K_PRINT,K_SYSREQ,K_BREAK,K_MENU,K_POWER,K_EURO]
-
+#------------functions----------------
 def reset_pointers():
     global level_selection_pointer
     global login_selection_pointer
@@ -116,15 +63,31 @@ def reset_pointers():
     login_selection_pointer=-1
     menu_selection_pointer=-1
 
-def hash_pass(password):
-    return hashlib.sha256(password.encode()).hexdigest()
+#------------Objects----------------
+class Snake():
+    def __init__(self):
+        self.x = 2
+        self.y = 1
+        self.length = 2
+        self.body =[[self.x, self.y], [self.x-1, self.y]]
+        self.direction = "right"
+        self.score = 0
+    def move(self):
+        if self.direction == "right":
+            self.x += 1
+        if self.direction == "left":
+            self.x -= 1
+        if self.direction == "up":
+            self.y -= 1
+        if self.direction == "down":
+            self.y += 1
+        self.body.insert(0, [self.x, self.y])
+        if len(self.body) > self.length:
+            self.body.pop()
+    def eat(self):
+        self.length += 1
+        self.score += 1
 
-def initialize_new_user_history(username,history):
-    history[username]={}
-    for i in range(3):
-        history[username][TRANSLATE_POINTER[i]]=[]
-    with open("history.json","w") as f:
-        json.dump(history,f,indent=4)
 class Food():
     def __init__(self):
         possible_food_locations = []
@@ -143,76 +106,14 @@ class Food():
             possible_food_locations.remove(i)
         self.x,self.y = random.choice(possible_food_locations)
 
-def reset():
+#-------------reset_game----------------
+def reset_game():
     global snake
     global food
     snake = Snake()
     food = Food()
 
-def are_you_sure_swap(are_you_sure_pointer):
-    are_you_sure_options=[("Yes", GREEN), ("No", RED)]
-    passive_color=WHITE
-    arrow='-> '
-    for i, (text, color) in enumerate(are_you_sure_options):
-        if i == are_you_sure_pointer:
-            text = arrow + text
-            blit_color = color
-        else:
-            blit_color = passive_color
-        DISPLAYSURF.blit(COMIC_SANS_BIG.render(text, False, blit_color), (350, 250 + 100*i))
-
-def menu_swap(menu_selection_pointer):
-    menu_options = [("PLAY", GREEN), ("Scoreboard", YELLOW), ("Game History", PINK)]
-    passive_color = WHITE
-    arrow = "-> "
-    for i, (text, color) in enumerate(menu_options):
-        if i == menu_selection_pointer:
-            text = arrow + text
-            blit_color = color
-        else:
-            blit_color = passive_color
-        DISPLAYSURF.blit(COMIC_SANS_BIG.render(text, False, blit_color), (350, 200 + 100*i))
-
-def level_swap(level_selection_pointer):
-    level_options=[("Easy", GREEN), ("Medium", YELLOW), ("Hard", RED)]
-    passive_color=WHITE
-    arrow='-> '
-    for i, (text, color) in enumerate(level_options):
-        if i == level_selection_pointer:
-            text=arrow+text
-            blit_color=color
-        else:
-            blit_color=passive_color
-        DISPLAYSURF.blit(COMIC_SANS.render(text, False, blit_color), (400, 250 + 50*i))
-
-def login_swap(login_selection_pointer):
-    login_options=[('Username:',GREEN),( 'Password:',YELLOW),('Login',PINK)]
-    passive_color=WHITE
-    arrow='-> '
-    for i, (text, color) in enumerate(login_options):
-        if i == login_selection_pointer:
-            text=arrow+text
-            blit_color=color
-        else:
-            blit_color=passive_color
-        DISPLAYSURF.blit(COMIC_SANS.render(text, False, blit_color), (250, 300 + 50*i))
-
-def display_username(username_display):
-    DISPLAYSURF.blit(COMIC_SANS.render(' '.join(username_display), False, WHITE),(450,300))
-
-def display_password(password_display):
-    DISPLAYSURF.blit(COMIC_SANS.render(' '.join(password_display), False, WHITE),(450,350))
-
-def user_check(username):
-    if username in users:
-            return True
-    return False
-
-def TRUE_login(username,password):
-    if users[username]==hash_pass(password):
-        return True
-    return False
-
+#---------------main----------------
 if __name__ == "__main__":
     running=True
     snake=Snake()
@@ -260,6 +161,38 @@ if __name__ == "__main__":
                     if event.key == pygame.K_ESCAPE:
                         running=False
             pygame.display.update()
+#-----------------------------SCOREBOARD--------------------------------------------
+        if scoreboard_lookup:
+            game_state='scoreboard'
+            scoreboard=pygame.Surface((800,400))
+            scoreboard.fill(GREY)
+            DISPLAYSURF.blit(scoreboard,(50,100))
+            DISPLAYSURF.blit(COMIC_SANS_BIG.render('Scoreboard', False, WHITE),(100,150))
+            DISPLAYSURF.blit(COMIC_SANS_SMOL.render('Press SPACE to return', False, WHITE),(100,550))
+            for event in events:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        scoreboard_lookup=False
+                        reset_pointers()
+                        menu=True
+                        game_state=last_game_state
+            pygame.display.update()
+#-----------------------------HISTORY--------------------------------------------
+        if history_lookup:
+            game_state='history'
+            history=pygame.Surface((800,400))
+            history.fill(GREY)
+            DISPLAYSURF.blit(history,(50,100))
+            DISPLAYSURF.blit(COMIC_SANS_BIG.render('History', False, WHITE),(100,150))
+            DISPLAYSURF.blit(COMIC_SANS_SMOL.render('Press SPACE to return', False, WHITE),(100,550))
+            for event in events:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        history_lookup=False
+                        reset_pointers()
+                        menu=True
+                        game_state=last_game_state
+            pygame.display.update()
 #-----------------------------LOGIN SCREEN--------------------------------------------
         if game_state=='login_screen':
             DISPLAYSURF.fill(BLACK)
@@ -302,7 +235,6 @@ if __name__ == "__main__":
                                 continue
                             if user_check(username):
                                 if TRUE_login(username,password):
-                                    reset_pointers()
                                     game_state='home'
                                 if not TRUE_login(username,password):
                                     wrong_password=True
@@ -311,17 +243,16 @@ if __name__ == "__main__":
                                     password=''
                             elif not user_check(username):
                                 users[username]=hash_pass(password)
-                                with open('users.json', 'w') as f:
-                                    json.dump(users, f, indent=4)
+                                users_dumper(users)
                                 initialize_new_user_history(username,history)
                                 new_user=True
-                                reset_pointers()
                                 game_state='home'
             pygame.display.update()
 
 
 #-----------------------------HOME SCREEN---------------------------------------
         if game_state=='home':
+            print(menu_selection_pointer)
             DISPLAYSURF.fill(BLACK)
             if menu:
                 menu_swap(menu_selection_pointer)
@@ -355,10 +286,12 @@ if __name__ == "__main__":
                                 difficulty_lookup=True
                             if menu_selection_pointer==1:
                                 reset_pointers()
-                                history_lookup=True
+                                last_game_state=game_state
+                                scoreboard_lookup=True
                             if menu_selection_pointer==2:
                                 reset_pointers()
-                                scoreboard_lookup=True
+                                last_game_state=game_state
+                                history_lookup=True
                         if event.key==pygame.K_BACKSPACE:
                             reset_pointers()
                             menu=False
@@ -379,7 +312,7 @@ if __name__ == "__main__":
                             level_selection_pointer=limit_number(level_selection_pointer+1)
                             level_swap(level_selection_pointer)
                         if event.key == pygame.K_SPACE:
-                            reset()
+                            reset_game()
                             game_state='game'
                         if event.key==pygame.K_BACKSPACE:
                             menu=True
@@ -404,6 +337,7 @@ if __name__ == "__main__":
                             reset_pointers()
                             menu=True
                             scoreboard_lookup=False
+                        
 
 
 
@@ -461,8 +395,7 @@ if __name__ == "__main__":
                     if snake.score > i:
                         print('New highscore!')
                 history[username][TRANSLATE_POINTER[level_selection_pointer]]=history[username][TRANSLATE_POINTER[level_selection_pointer]]+[snake.score]
-                with open('history.json','w') as f:
-                    json.dump(history,f)
+                history_dumper(history)
                 game_over=False
             if snake.x == food.x and snake.y == food.y:
                 snake.eat()

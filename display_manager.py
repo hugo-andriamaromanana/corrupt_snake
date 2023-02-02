@@ -125,7 +125,7 @@ def display_history(username, history):
     for level, scores in history[username].items():
         DISPLAYSURF.blit(COMIC_SANS.render(level, False, level_colors[level]), (x, y))
         y+=50
-        scores = scores[-5:]  # only display the 10 most recent scores
+        scores = scores[-5:]
         for score in scores:
             DISPLAYSURF.blit(COMIC_SANS.render(str(score), False, WHITE), (x, y))
             y+=50
@@ -144,4 +144,11 @@ def display_tutorial(username):
     DISPLAYSURF.blit(COMIC_SANS_SMOL.render('Don\'t hit the walls or yourself', False, WHITE), (100, 275))
     DISPLAYSURF.blit(COMIC_SANS_SMOL.render('Press SPACE to quit', False, WHITE), (100, 375))
     DISPLAYSURF.blit(COMIC_SANS_SMOL.render('Use your arrows to navigate', False, WHITE), (100, 325))
+    pygame.display.update()
+
+def display_NEW_HIGH_SCORE():
+    DISPLAYSURF.blit(COMIC_SANS.render('NEW HIGH SCORE! Check the leaderboard!', False, BLUE), (75, 250))
+    pygame.display.update()
+    pygame.time.wait(1000)
+    DISPLAYSURF.blit(COMIC_SANS.render('NEW HIGH SCORE! Check the leaderboard!', False, BLACK), (50, 250))
     pygame.display.update()

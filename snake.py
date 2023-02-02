@@ -109,6 +109,7 @@ if __name__ == "__main__":
     scoreboard_lookup=False
     are_you_sure=False
     running=True
+    new_high_score=False
     #------------login_screen----------------
     username_display=['_']*6
     username=''
@@ -116,11 +117,13 @@ if __name__ == "__main__":
     password=''
     #------------scoreboard-----------------
     scoreboard={}
+    scoreboard=update_scoreboard(history,scoreboard)
     #Initialise game objects
     snake=Snake()
     food=Food()
     while running:
         events = pygame.event.get()
+
 #-----------------------------NEW USER: Tutorial--------------------------------------------
         if new_user:
             menu=False
@@ -235,6 +238,9 @@ if __name__ == "__main__":
 #-----------------------------HOME SCREEN---------------------------------------
         if game_state=='home':
             DISPLAYSURF.fill(BLACK)
+            if new_high_score:
+                display_NEW_HIGH_SCORE()
+                new_high_score=False
             if menu:
                 menu_swap(menu_selection_pointer)
             if difficulty_lookup:
@@ -266,7 +272,6 @@ if __name__ == "__main__":
                                 reset_pointers()
                                 last_game_state=game_state
                                 scoreboard_lookup=True
-                                update_scoreboard(history,scoreboard)
                             if menu_selection_pointer==2:
                                 reset_pointers()
                                 last_game_state=game_state
@@ -321,6 +326,7 @@ if __name__ == "__main__":
 
 #-----------------------------GAME SCREEN---------------------------------------
         if game_state=='game':
+            # update_scoreboard(history,scoreboard)
             display_game()
             for event in events:
                 if event.type == pygame.KEYDOWN:
@@ -341,18 +347,21 @@ if __name__ == "__main__":
             for i in range(1, len(snake.body)):
                 if snake.body[0] == snake.body[i]:
                     game_over=True
-                    game_state='home'
             if snake.x < 1 or snake.x > LEVEL_SETTINGS[level_selection_pointer]['INNER_GRID_WIDTH'] or snake.y < 1 or snake.y > LEVEL_SETTINGS[level_selection_pointer]['INNER_GRID_HEIGHT']:
                 game_over=True
-                game_state='home'
-            # if game_over==True and game_state=='home':
-            #     new_user=False
-            #     for i in [i for i in scoreboard[TRANSLATE_POINTER[level_selection_pointer]].values()]:
-            #         if snake.score > i:
-
+            if game_over:
                 if snake.score >1:
                     history[username][TRANSLATE_POINTER[level_selection_pointer]]=history[username][TRANSLATE_POINTER[level_selection_pointer]]+[snake.score]
                 history_dumper(history)
+                last_scoreboard=scoreboard
+                scoreboard={}
+                scoreboard=update_scoreboard(history,scoreboard)
+                if scoreboard!=last_scoreboard:
+                    new_high_score=True
+                    difficulty_lookup=False
+                    game_state='home'
+                    menu=True
+                game_state='home'
                 game_over=False
             if snake.x == food.x and snake.y == food.y:
                 snake.eat()

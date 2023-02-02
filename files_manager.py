@@ -2,10 +2,16 @@ import json
 import hashlib
 
 TRANSLATE_POINTER = {
-    2: 'Hard',
+    0: 'Easy',
     1: 'Medium',
-    0: 'Easy'
+    2: 'Hard'
 }
+
+def adjust_settings(dic,TRANSLATE_POINTER):
+    empty_dic = {}
+    for i, level in enumerate(TRANSLATE_POINTER.values()):
+        empty_dic[i] = dic[level]
+    return empty_dic
 
 #------------Json----------------
 with open('json/users.json') as f:
@@ -13,6 +19,9 @@ with open('json/users.json') as f:
 
 with open('json/history.json') as f:
     history = json.load(f)
+
+with open('json/settings.json') as f:
+    LEVEL_SETTINGS = adjust_settings(json.load(f),TRANSLATE_POINTER)
 
 #-----------Json dump----------
 def users_dumper(data):
@@ -24,6 +33,8 @@ def history_dumper(data):
         json.dump(data, f,indent=4)
 
 #------------functions for Json----------------
+
+
 def hash_pass(password):
     return hashlib.sha256(password.encode()).hexdigest()
 

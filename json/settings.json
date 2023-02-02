@@ -1,0 +1,26 @@
+{
+    "Easy": {
+        "GRID_HEIGHT": 8,
+         "GRID_WIDTH": 12,
+         "INNER_GRID_HEIGHT": 6,
+         "INNER_GRID_WIDTH": 10,
+         "SPEED": 200,
+         "CELL_SIZE": 80
+         },
+    "Medium": {
+        "GRID_HEIGHT": 11,
+         "GRID_WIDTH": 16,
+         "INNER_GRID_HEIGHT": 9,
+         "INNER_GRID_WIDTH": 14,
+         "SPEED": 150,
+         "CELL_SIZE": 60
+         },
+    "Hard": {
+        "GRID_HEIGHT": 22,
+         "GRID_WIDTH": 32,
+         "INNER_GRID_HEIGHT": 20,
+         "INNER_GRID_WIDTH": 30,
+         "SPEED": 100,
+         "CELL_SIZE": 30
+         }
+}

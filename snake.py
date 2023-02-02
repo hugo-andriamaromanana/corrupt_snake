@@ -1,12 +1,10 @@
 import pygame
-from pygame.locals import *
 import random
 from files_manager import *
 from display_manager import *
 
 #------------pygame----------------
 pygame.init()
-pygame.font.init()
 pygame.display.set_caption("snake")
 
 #------------screen----------------
@@ -14,32 +12,7 @@ screen = pygame.display.set_mode((960, 660))
 screen.fill(GREY)
 
 #------------SNAKE----------------
-LEVEL_SETTINGS={
-    0: {
-        'GRID_HEIGHT': 8,
-         'GRID_WIDTH': 12,
-         'INNER_GRID_HEIGHT': 6,
-         'INNER_GRID_WIDTH': 10,
-         'SPEED': 200,
-         'CELL_SIZE': 80
-         },
-    1: {
-        'GRID_HEIGHT': 11,
-         'GRID_WIDTH': 16,
-         'INNER_GRID_HEIGHT': 9,
-         'INNER_GRID_WIDTH': 14,
-         'SPEED': 150,
-         'CELL_SIZE': 60
-         },
-    2: {
-        'GRID_HEIGHT': 22,
-         'GRID_WIDTH': 32,
-         'INNER_GRID_HEIGHT': 20,
-         'INNER_GRID_WIDTH': 30,
-         'SPEED': 100,
-         'CELL_SIZE': 30
-         },
-}
+
 
 #------------functions----------------
 def reset_pointers():

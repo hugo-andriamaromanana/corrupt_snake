@@ -1,37 +1,14 @@
 import pygame
 from pygame.locals import *
-
-
-#------------colors----------------
-BLACK=(0,0,0)
-WHITE=(255,255,255)
-RED=(255,0,0)
-GREEN=(0,255,0)
-BLUE=(0,0,255)
-YELLOW=(255,255,0)
-ORANGE=(255,165,0)
-PURPLE=(128,0,128)
-PINK=(255,192,203)
-LIGHT_BLUE=(173,216,230)
-CLEAR_BLUE=(0,191,255)
-GREY=(128,128,128)
-
-#------------pygame----------------
-pygame.init()
-pygame.font.init()
+from colors import *
+from fonts import *
 
 #------------pygame----------------
 DISPLAYSURF = pygame.display.set_mode((960, 660))
 
-#------------font----------------
-COMIC_SANS_SMOL = pygame.font.SysFont('Comic Sans MS', 20)
-COMIC_SANS = pygame.font.SysFont('Comic Sans MS', 30)
-COMIC_SANS_BIG = pygame.font.SysFont('Comic Sans MS', 50)
-
 #------------constants----------------
 AUTHORIZED_LETTERS='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
 KEYS = [K_UP, K_DOWN, K_LEFT, K_RIGHT, K_RETURN, K_ESCAPE, K_BACKSPACE, K_TAB, K_SPACE,K_LSHIFT,K_LCTRL,K_RSHIFT,K_RCTRL,K_CAPSLOCK,K_LALT,K_RALT,K_LMETA,K_RMETA,K_LSUPER,K_RSUPER,K_MODE,K_HELP,K_PRINT,K_SYSREQ,K_BREAK,K_MENU,K_POWER,K_EURO]
-
 
 #------------index/pointer___init___----------------
 level_selection_pointer=0
@@ -40,21 +17,8 @@ menu_selection_pointer=-1
 are_you_sure_pointer=0
 
 #------------functions----------------
-
 limit_number = lambda n: max(min(n, 2), 0)
 limit_number_for_2 = lambda n: max(min(n, 1), 0)
-
-#------------game_vars-----------------------
-
-new_user=False
-wrong_password=False
-game_over=False
-menu=False
-difficulty_lookup=False
-history_lookup=False
-scoreboard_lookup=False
-are_you_sure=False
-running=True
 
 #Dislay Manager
 #------------swappers----------------

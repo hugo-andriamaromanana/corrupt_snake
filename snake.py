@@ -68,9 +68,20 @@ def reset_game():
     global snake
     global food
     global game_over
+    global random_color_1
+    global random_color_2
+    global random_color_3
     snake = Snake()
     food = Food()
     game_over = False
+    random_color_1 = random.choice(all_colors)
+    random_color_2 = random.choice(all_colors)
+    while random_color_1 == random_color_2:
+        random_color_2 = random.choice(all_colors)
+    random_color_3 = random.choice(all_colors)
+    while random_color_3 == random_color_1 or random_color_3 == random_color_2:
+        random_color_3 = random.choice(all_colors)
+    
 
 #-------------intern display----------------
 def display_welcome_message(true_false):
@@ -90,11 +101,11 @@ def display_game():
     for pos_y in range(len(grid)):
         for pos_x in range(len(grid[pos_y])):
             if grid[pos_y][pos_x]==0:
-                DISPLAYSURF.fill(WHITE,((pos_x*LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']),(pos_y*LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']),LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']-1,LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']-1))
+                DISPLAYSURF.fill(BLACK,((pos_x*LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']),(pos_y*LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']),LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']-1,LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']-1))
             elif grid[pos_y][pos_x]==1:
-                DISPLAYSURF.fill(PINK,((pos_x*LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']),(pos_y*LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']),LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']-1,LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']-1))
+                DISPLAYSURF.fill(random_color_1,((pos_x*LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']),(pos_y*LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']),LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']-1,LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']-1))
     for coords in range(len(body)):
-                DISPLAYSURF.fill(GREEN, ((body[coords][0]*LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']),(body[coords][1]*LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']),LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']-1,LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']-1))
+                DISPLAYSURF.fill(random_color_2, ((body[coords][0]*LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']),(body[coords][1]*LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']),LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']-1,LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']-1))
 
 #---------------main----------------
 if __name__ == "__main__":
@@ -110,6 +121,13 @@ if __name__ == "__main__":
     are_you_sure=False
     running=True
     new_high_score=False
+    random_color_1 = random.choice(all_colors)
+    random_color_2 = random.choice(all_colors)
+    while random_color_1 == random_color_2:
+        random_color_2 = random.choice(all_colors)
+    random_color_3 = random.choice(all_colors)
+    while random_color_3 == random_color_1 or random_color_3 == random_color_2:
+        random_color_3 = random.choice(all_colors)
     #------------login_screen----------------
     username_display=['_']*6
     username=''
@@ -366,7 +384,7 @@ if __name__ == "__main__":
             if snake.x == food.x and snake.y == food.y:
                 snake.eat()
                 food.new_food()
-            DISPLAYSURF.fill(RED,((food.x*LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']),(food.y*LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']),LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']-1,LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']-1))
+            DISPLAYSURF.fill(random_color_3,((food.x*LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']),(food.y*LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']),LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']-1,LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']-1))
             snake.move()
             pygame.display.update()
             pygame.time.wait(LEVEL_SETTINGS[level_selection_pointer]['SPEED'])

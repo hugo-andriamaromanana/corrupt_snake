@@ -50,6 +50,7 @@ def login_swap(login_selection_pointer):
     DISPLAYSURF.fill(BLACK)
     DISPLAYSURF.blit(COMIC_SANS_BIG.render('Welcome to Snake', False, WHITE),(250,100))
     DISPLAYSURF.blit(COMIC_SANS.render('Please login !', False, WHITE),(250,250))
+    DISPLAYSURF.blit(COMIC_SANS_SMOL.render('SPACE: play, ENTER: select, BACKSPACE: return, ESC: quit', False, GREY),(200,600))
     login_options=[('Username:',GREEN),( 'Password:',YELLOW),('Login',PINK)]
     passive_color=WHITE
     arrow='-> '

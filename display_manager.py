@@ -167,3 +167,4 @@ def display_history(history):
         x+=200
         y=175
     pygame.display.update()
+

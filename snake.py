@@ -102,6 +102,29 @@ def reset_game():
     food = Food()
     game_over = False
 
+#-------------intern display----------------
+def display_welcome_message(true_false):
+    if true_false:
+        DISPLAYSURF.blit(COMIC_SANS.render(f'New user created! Best of luck! {username}', False, GREEN),(200,550))
+    if not true_false:
+        DISPLAYSURF.blit(COMIC_SANS.render(f'Welcome back {username}!', False, PURPLE),(250,500))
+
+def display_game():
+    screen.fill(GREY)
+    grid = [[0 for _ in range(LEVEL_SETTINGS[level_selection_pointer]['GRID_WIDTH'])] for _ in range(LEVEL_SETTINGS[level_selection_pointer]['GRID_HEIGHT'])]
+    grid = [[1]+row[1:] for row in grid]
+    grid = [row[:-1]+[1] for row in grid]
+    grid[0]=[1 for _ in range(LEVEL_SETTINGS[level_selection_pointer]['GRID_WIDTH'])]
+    grid[-1]=[1 for _ in range(LEVEL_SETTINGS[level_selection_pointer]['GRID_WIDTH'])]
+    body = snake.body
+    for pos_y in range(len(grid)):
+        for pos_x in range(len(grid[pos_y])):
+            if grid[pos_y][pos_x]==0:
+                DISPLAYSURF.fill(WHITE,((pos_x*LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']),(pos_y*LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']),LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']-1,LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']-1))
+            elif grid[pos_y][pos_x]==1:
+                DISPLAYSURF.fill(PINK,((pos_x*LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']),(pos_y*LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']),LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']-1,LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']-1))
+    for coords in range(len(body)):
+                DISPLAYSURF.fill(GREEN, ((body[coords][0]*LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']),(body[coords][1]*LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']),LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']-1,LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']-1))
 
 #---------------main----------------
 if __name__ == "__main__":
@@ -237,10 +260,7 @@ if __name__ == "__main__":
             if difficulty_lookup:
                 DISPLAYSURF.blit(COMIC_SANS.render('Select difficulty:', False, WHITE),(350,200))
                 level_swap(level_selection_pointer)
-            if new_user:
-                DISPLAYSURF.blit(COMIC_SANS.render(f'New user created! Best of luck! {username}', False, GREEN),(200,550))
-            if not new_user:
-                DISPLAYSURF.blit(COMIC_SANS.render(f'Welcome back {username}!', False, PURPLE),(250,500))
+            display_welcome_message(new_user)
             DISPLAYSURF.blit(COMIC_SANS_SMOL.render('SPACE: play, ENTER: select, BACKSPACE: return, ESC: quit', False, GREY),(200,600))
             DISPLAYSURF.blit(COMIC_SANS_BIG.render(f'Welcome to Snake {username}', False, WHITE),(200,75))
             for event in events:
@@ -321,21 +341,7 @@ if __name__ == "__main__":
 
 #-----------------------------GAME SCREEN---------------------------------------
         if game_state=='game':
-            screen.fill(GREY)
-            grid = [[0 for _ in range(LEVEL_SETTINGS[level_selection_pointer]['GRID_WIDTH'])] for _ in range(LEVEL_SETTINGS[level_selection_pointer]['GRID_HEIGHT'])]
-            grid = [[1]+row[1:] for row in grid]
-            grid = [row[:-1]+[1] for row in grid]
-            grid[0]=[1 for _ in range(LEVEL_SETTINGS[level_selection_pointer]['GRID_WIDTH'])]
-            grid[-1]=[1 for _ in range(LEVEL_SETTINGS[level_selection_pointer]['GRID_WIDTH'])]
-            body = snake.body
-            for pos_y in range(len(grid)):
-                for pos_x in range(len(grid[pos_y])):
-                    if grid[pos_y][pos_x]==0:
-                        DISPLAYSURF.fill(WHITE,((pos_x*LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']),(pos_y*LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']),LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']-1,LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']-1))
-                    elif grid[pos_y][pos_x]==1:
-                        DISPLAYSURF.fill(PINK,((pos_x*LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']),(pos_y*LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']),LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']-1,LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']-1))
-            for coords in range(len(body)):
-                DISPLAYSURF.fill(GREEN, ((body[coords][0]*LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']),(body[coords][1]*LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']),LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']-1,LEVEL_SETTINGS[level_selection_pointer]['CELL_SIZE']-1))
+            display_game()
             for event in events:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:

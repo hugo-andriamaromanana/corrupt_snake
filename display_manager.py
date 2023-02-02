@@ -113,18 +113,19 @@ def display_wrong_password(wrong_password):
         DISPLAYSURF.blit(COMIC_SANS_BIG.render('Wrong Password', False, BLACK), (500, 500))
         pygame.display.update()
 
-def display_history(history):
+def display_history(username, history):
     history_surface = pygame.Surface((800, 400))
     history_surface.fill(GREY)
     DISPLAYSURF.blit(history_surface, (50, 100))
-    DISPLAYSURF.blit(COMIC_SANS_BIG.render('Game History', False, BLUE), (300, 100))
+    DISPLAYSURF.blit(COMIC_SANS_BIG.render(f'{username}\'s Score History', False, BLUE), (250, 100))
     DISPLAYSURF.blit(COMIC_SANS_SMOL.render('Press SPACE to return', False, WHITE), (100, 550))
     level_colors = {'Easy': GREEN, 'Medium': ORANGE, 'Hard': RED}
     x=150
     y=175
-    for level, scores in history.items():
+    for level, scores in history[username].items():
         DISPLAYSURF.blit(COMIC_SANS.render(level, False, level_colors[level]), (x, y))
         y+=50
+        scores = scores[-5:]  # only display the 10 most recent scores
         for score in scores:
             DISPLAYSURF.blit(COMIC_SANS.render(str(score), False, WHITE), (x, y))
             y+=50
@@ -132,3 +133,15 @@ def display_history(history):
         y=175
     pygame.display.update()
 
+def display_tutorial(username):
+    tutorial_surface = pygame.Surface((800, 400))
+    tutorial_surface.fill(GREY)
+    DISPLAYSURF.blit(tutorial_surface, (50, 100))
+    DISPLAYSURF.blit(COMIC_SANS_BIG.render(f'Tutorial: Welcome {username}', False, BLUE), (100, 100))
+    DISPLAYSURF.blit(COMIC_SANS_SMOL.render('Press SPACE to return', False, WHITE), (100, 550))
+    DISPLAYSURF.blit(COMIC_SANS_SMOL.render('Use the arrow keys to move the snake', False, WHITE), (100, 175))
+    DISPLAYSURF.blit(COMIC_SANS_SMOL.render('Eat the food to grow', False, WHITE), (100, 225))
+    DISPLAYSURF.blit(COMIC_SANS_SMOL.render('Don\'t hit the walls or yourself', False, WHITE), (100, 275))
+    DISPLAYSURF.blit(COMIC_SANS_SMOL.render('Press SPACE to quit', False, WHITE), (100, 375))
+    DISPLAYSURF.blit(COMIC_SANS_SMOL.render('Use your arrows to navigate', False, WHITE), (100, 325))
+    pygame.display.update()

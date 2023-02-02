@@ -11,9 +11,6 @@ pygame.display.set_caption("snake")
 screen = pygame.display.set_mode((960, 660))
 screen.fill(GREY)
 
-#------------SNAKE----------------
-
-
 #------------functions----------------
 def reset_pointers():
     global level_selection_pointer
@@ -124,7 +121,20 @@ if __name__ == "__main__":
     food=Food()
     while running:
         events = pygame.event.get()
-
+#-----------------------------NEW USER: Tutorial--------------------------------------------
+        if new_user:
+            menu=False
+            users[username]=hash_pass(password)
+            users_dumper(users)
+            initialize_new_user_history(username,history)
+            history_dumper(history)
+            display_tutorial(username)
+            for event in events:
+                if event.type == pygame.KEYDOWN:
+                    new_user=False
+                    game_state='home'
+                    menu=True
+                    reset_pointers()
 #-----------------------------ARE YOU SURE--------------------------------------------
         if are_you_sure:
             game_state='are_you_sure'
@@ -160,7 +170,7 @@ if __name__ == "__main__":
 #-----------------------------HISTORY--------------------------------------------
         if history_lookup:
             game_state='history'
-            display_history(history)
+            display_history(username,history)
             for event in events:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
@@ -216,12 +226,9 @@ if __name__ == "__main__":
                                     password_display=['_']*4
                                     password=''
                             elif not user_check(username):
-                                users[username]=hash_pass(password)
-                                users_dumper(users)
-                                initialize_new_user_history(username,history)
+                                game_state='new_user'
                                 new_user=True
-                                menu=True
-                                game_state='home'
+            
             pygame.display.update()
 
 

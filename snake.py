@@ -121,6 +121,7 @@ if __name__ == "__main__":
     are_you_sure=False
     running=True
     new_high_score=False
+    blocker=False
     random_color_1 = random.choice(all_colors)
     random_color_2 = random.choice(all_colors)
     while random_color_1 == random_color_2:
@@ -175,30 +176,6 @@ if __name__ == "__main__":
                             game_state=last_game_state
                     if event.key == pygame.K_ESCAPE:
                         running=False
-            pygame.display.update()
-#-----------------------------SCOREBOARD--------------------------------------------
-        if scoreboard_lookup:
-            game_state='scoreboard'
-            display_scoreboard(scoreboard)
-            for event in events:
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_SPACE:
-                        scoreboard_lookup=False
-                        reset_pointers()
-                        menu=True
-                        game_state=last_game_state
-            pygame.display.update()
-#-----------------------------HISTORY--------------------------------------------
-        if history_lookup:
-            game_state='history'
-            display_history(username,history)
-            for event in events:
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_SPACE:
-                        history_lookup=False
-                        reset_pointers()
-                        menu=True
-                        game_state=last_game_state
             pygame.display.update()
 #-----------------------------LOGIN SCREEN--------------------------------------------
         if game_state=='login_screen':
@@ -273,6 +250,7 @@ if __name__ == "__main__":
                     
 #-----------------------------MENU----------------------------------------------
                     if menu:
+                        blocker=False
                         difficulty_lookup=False
                         history_lookup=False
                         scoreboard_lookup=False
@@ -285,7 +263,9 @@ if __name__ == "__main__":
                         if event.key == pygame.K_RETURN:
                             if menu_selection_pointer==0:
                                 reset_pointers()
+                                menu=False
                                 difficulty_lookup=True
+
                             if menu_selection_pointer==1:
                                 reset_pointers()
                                 last_game_state=game_state
@@ -306,16 +286,17 @@ if __name__ == "__main__":
 
 #-----------------------------DIFFICULTY-------------------------------------------
                     if difficulty_lookup:
-                        menu=False
                         if event.key == K_UP:
                             level_selection_pointer=limit_number(level_selection_pointer-1)
                             level_swap(level_selection_pointer)
                         if event.key == K_DOWN:
                             level_selection_pointer=limit_number(level_selection_pointer+1)
                             level_swap(level_selection_pointer)
-                        if event.key == pygame.K_SPACE:
-                            reset_game()
-                            game_state='game'
+                        if blocker:
+                            if event.key == pygame.K_RETURN:
+                                blocker=False
+                                reset_game()
+                                game_state='game'
                         if event.key==pygame.K_BACKSPACE:
                             menu=True
                             difficulty_lookup=False
@@ -339,6 +320,30 @@ if __name__ == "__main__":
                         are_you_sure=True
                 if event.type == pygame.QUIT:
                     running = False
+            pygame.display.update()
+#-----------------------------SCOREBOARD--------------------------------------------
+        if scoreboard_lookup:
+            game_state='scoreboard'
+            display_scoreboard(scoreboard)
+            for event in events:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        scoreboard_lookup=False
+                        reset_pointers()
+                        menu=True
+                        game_state=last_game_state
+            pygame.display.update()
+#-----------------------------HISTORY--------------------------------------------
+        if history_lookup:
+            game_state='history'
+            display_history(username,history)
+            for event in events:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        history_lookup=False
+                        reset_pointers()
+                        menu=True
+                        game_state=last_game_state
             pygame.display.update()
 
 

@@ -19,7 +19,6 @@ are_you_sure_pointer=0
 #------------functions----------------
 limit_number = lambda n: max(min(n, 2), 0)
 limit_number_for_2 = lambda n: max(min(n, 1), 0)
-
 #Dislay Manager
 #------------swappers----------------
 def menu_swap(menu_selection_pointer):

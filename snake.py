@@ -122,6 +122,7 @@ if __name__ == "__main__":
     running=True
     new_high_score=False
     blocker=False
+    k_up_pressed=False
     random_color_1 = random.choice(all_colors)
     random_color_2 = random.choice(all_colors)
     while random_color_1 == random_color_2:
@@ -265,7 +266,6 @@ if __name__ == "__main__":
                                 reset_pointers()
                                 menu=False
                                 difficulty_lookup=True
-
                             if menu_selection_pointer==1:
                                 reset_pointers()
                                 last_game_state=game_state
@@ -286,7 +286,12 @@ if __name__ == "__main__":
 
 #-----------------------------DIFFICULTY-------------------------------------------
                     if difficulty_lookup:
+                        if not k_up_pressed:
+                            key_event=pygame.event.Event(pygame.KEYDOWN, {'key': pygame.K_UP})
+                            pygame.event.post(key_event)
+                            k_up_pressed=True
                         if event.key == K_UP:
+                            key_event=None
                             blocker=True
                             level_selection_pointer=limit_number(level_selection_pointer-1)
                             level_swap(level_selection_pointer)
@@ -296,7 +301,6 @@ if __name__ == "__main__":
                             level_swap(level_selection_pointer)
                         if blocker:
                             if event.key == pygame.K_RETURN:
-                                    blocker=False
                                     reset_game()
                                     game_state='game'
                         if event.key==pygame.K_BACKSPACE:

@@ -2,20 +2,16 @@ import pygame
 from pygame.locals import *
 from colors import *
 from fonts import *
-
 #------------pygame----------------
 DISPLAYSURF = pygame.display.set_mode((960, 660))
-
 #------------constants----------------
 AUTHORIZED_LETTERS='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
 KEYS = [K_UP, K_DOWN, K_LEFT, K_RIGHT, K_RETURN, K_ESCAPE, K_BACKSPACE, K_TAB, K_SPACE,K_LSHIFT,K_LCTRL,K_RSHIFT,K_RCTRL,K_CAPSLOCK,K_LALT,K_RALT,K_LMETA,K_RMETA,K_LSUPER,K_RSUPER,K_MODE,K_HELP,K_PRINT,K_SYSREQ,K_BREAK,K_MENU,K_POWER,K_EURO]
-
 #------------index/pointer___init___----------------
 level_selection_pointer=0
 login_selection_pointer=-1
 menu_selection_pointer=-1
 are_you_sure_pointer=0
-
 #------------functions----------------
 limit_number = lambda n: max(min(n, 2), 0)
 limit_number_for_2 = lambda n: max(min(n, 1), 0)
@@ -44,7 +40,6 @@ def level_swap(level_selection_pointer):
         else:
             blit_color=passive_color
         DISPLAYSURF.blit(COMIC_SANS.render(text, False, blit_color), (400, 250 + 50*i))
-
 def login_swap(login_selection_pointer):
     DISPLAYSURF.fill(BLACK)
     DISPLAYSURF.blit(COMIC_SANS_BIG.render('Welcome to Snake', False, WHITE),(250,100))
@@ -60,7 +55,6 @@ def login_swap(login_selection_pointer):
         else:
             blit_color=passive_color
         DISPLAYSURF.blit(COMIC_SANS.render(text, False, blit_color), (250, 300 + 50*i))
-
 def are_you_sure_swap(are_you_sure_pointer):
     quit_popup=pygame.Surface((800,400))
     quit_popup.fill(GREY)
@@ -77,15 +71,11 @@ def are_you_sure_swap(are_you_sure_pointer):
         else:
             blit_color = passive_color
         DISPLAYSURF.blit(COMIC_SANS_BIG.render(text, False, blit_color), (350, 250 + 100*i))
-
 #------------display functions----------------
-
 def display_username(username_display):
     DISPLAYSURF.blit(COMIC_SANS.render(' '.join(username_display), False, WHITE),(450,300))
-
 def display_password(password_display):
     DISPLAYSURF.blit(COMIC_SANS.render(' '.join(password_display), False, WHITE),(450,350))
-
 def display_scoreboard(scoreboard):
     scoreboard_surface = pygame.Surface((800, 400))
     scoreboard_surface.fill(GREY)
@@ -104,7 +94,6 @@ def display_scoreboard(scoreboard):
         x+=200
         y=175
     pygame.display.update()
-
 def display_wrong_password(wrong_password):
     if wrong_password:
         DISPLAYSURF.blit(COMIC_SANS_BIG.render('Wrong Password', False, RED), (500, 500))
@@ -112,7 +101,6 @@ def display_wrong_password(wrong_password):
         pygame.time.wait(1000)
         DISPLAYSURF.blit(COMIC_SANS_BIG.render('Wrong Password', False, BLACK), (500, 500))
         pygame.display.update()
-
 def display_history(username, history):
     history_surface = pygame.Surface((800, 400))
     history_surface.fill(GREY)
@@ -132,7 +120,6 @@ def display_history(username, history):
         x+=200
         y=175
     pygame.display.update()
-
 def display_tutorial(username):
     tutorial_surface = pygame.Surface((800, 400))
     tutorial_surface.fill(GREY)
@@ -145,7 +132,6 @@ def display_tutorial(username):
     DISPLAYSURF.blit(COMIC_SANS_SMOL.render('Press SPACE to quit', False, WHITE), (100, 375))
     DISPLAYSURF.blit(COMIC_SANS_SMOL.render('Use your arrows to navigate', False, WHITE), (100, 325))
     pygame.display.update()
-
 def display_NEW_HIGH_SCORE():
     DISPLAYSURF.blit(COMIC_SANS.render('NEW HIGH SCORE! Check the leaderboard!', False, BLUE), (75, 250))
     pygame.display.update()

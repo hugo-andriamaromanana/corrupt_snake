@@ -287,16 +287,18 @@ if __name__ == "__main__":
 #-----------------------------DIFFICULTY-------------------------------------------
                     if difficulty_lookup:
                         if event.key == K_UP:
+                            blocker=True
                             level_selection_pointer=limit_number(level_selection_pointer-1)
                             level_swap(level_selection_pointer)
                         if event.key == K_DOWN:
+                            blocker=True
                             level_selection_pointer=limit_number(level_selection_pointer+1)
                             level_swap(level_selection_pointer)
                         if blocker:
                             if event.key == pygame.K_RETURN:
-                                blocker=False
-                                reset_game()
-                                game_state='game'
+                                    blocker=False
+                                    reset_game()
+                                    game_state='game'
                         if event.key==pygame.K_BACKSPACE:
                             menu=True
                             difficulty_lookup=False
